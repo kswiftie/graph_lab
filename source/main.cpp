@@ -5,18 +5,19 @@
 #include "..\\include\\libraries.hpp"
 #include "..\\include\\bmp_structs.hpp"
 
-void program(int V, int E, std::set <int> *graph, std::string outfilename, std::set <std::pair <int, int>> edges, int kae) {
+void program(int V, int E, std::set <int> *graph, std::string outputfilename, std::set <std::pair <int, int>> edges, int kae) {
     const int width = 800;
     const int height = 800;
     Pixel pixels[width][height];
     BMPHeader bmpHeader = {0x4D42, width * height * 3 + sizeof(BMPHeader) + sizeof(DIBHeader), 0, 0, sizeof(BMPHeader) + sizeof(DIBHeader)};
     DIBHeader dibHeader = {sizeof(DIBHeader), width, height, 1, 24, 0, width * height * 3, 2835, 2835, 0, 0};
 
-    std::ofstream image(".\\output\\" + outfilename +".bmp", std::ios::binary);
+    std::ofstream image(".\\output\\" + outputfilename +".bmp", std::ios::binary);
     image.write(reinterpret_cast<char*>(&bmpHeader), sizeof(BMPHeader));
     image.write(reinterpret_cast<char*>(&dibHeader), sizeof(DIBHeader));
 
     fill_field(pixels);
+
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> distrib(0.0, (double)std::min(height, width));
@@ -32,14 +33,14 @@ void program(int V, int E, std::set <int> *graph, std::string outfilename, std::
     }
 
     double L = sqrt((double)width * (double)height / V);
+    // force-layout algorithm
     fruchtermanReingold(points, graph, L, V, kae);
     scale_graph(points, V, height, width);
-    for (int i = 0; i < V; ++i) {
-        drawCircle(points[i].x, points[i].y, 5, pixels);
-    }
-    for (auto edge: edges) {
-        drawLine(round(points[edge.first].x), round(points[edge.first].y), round(points[edge.second].x), round(points[edge.second].y), pixels);
-    }
+
+    // visualise graph
+    visualise_graph(V, points, pixels, 5, edges);
+    
+
     // вписываем пиксели
     for(int x = 0; x < width; ++x) {
         for(int y = 0; y < height; ++y) {
@@ -69,8 +70,10 @@ int main() {
             graph[b].insert(a);
         }
     }
-    std::string outfilename = "outtest1";
-    program(V, E, graph, outfilename, edges, 100);
+    for (int i = 0; i < 1 /*number of tests*/; ++i) {
+        std::string outputfilename = "test_" + std::to_string(i) + "_result";
+        program(V, E, graph, outputfilename, edges, 100);
+    }
     inpfile.close();
     return 0;
 }

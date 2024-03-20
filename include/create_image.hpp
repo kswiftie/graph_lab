@@ -1,7 +1,9 @@
 #ifndef CREATE_IMAGE_HPP
 #define CREATE_IMAGE_HPP
-#include "field_structs.hpp"
+
 #include <stdlib.h>
+
+#include "field_structs.hpp"
 
 void fill_field(Pixel pixels);
 
