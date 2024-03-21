@@ -3,11 +3,12 @@
 void create(int V, int test_name) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> distrib(0, V);
+    std::uniform_int_distribution<> distrib(0, V - 1);
     std::uniform_int_distribution<> E_rand(0, 2000);
     std::ofstream file(".\\input\\test_" + std::to_string(test_name) + ".txt");
-    file << V << " " << E_rand(gen) << "\n";
-    for (int i = 0; i < V; ++i) {
+    int E = E_rand(gen);
+    file << V << " " << E << "\n";
+    for (int i = 0; i < E; ++i) {
         file << distrib(gen) << " " << distrib(gen) << "\n";
     }
     file.close();

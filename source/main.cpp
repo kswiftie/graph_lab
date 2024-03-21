@@ -51,7 +51,7 @@ void program(int V, int E, std::set <int> *graph, std::string outputfilename, st
 }
 
 int main() {
-    std::string path = ".\\input\\test_1.txt";
+    std::string path = ".\\input\\test_2.txt";
     std::ifstream inpfile(path, std::ios::in);
     if (!inpfile.is_open()) {
         std::cout << "File does not exist";
@@ -68,6 +68,7 @@ int main() {
         if (a != b) {
             graph[a].insert(b);
             graph[b].insert(a);
+            edges.insert(std::make_pair(a, b));
         }
     }
     for (int i = 0; i < 1 /*number of tests*/; ++i) {
